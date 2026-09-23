@@ -1,125 +1,83 @@
-# MaxMin Manufacturing Business Intelligence Project
+# MaxMin Manufacturing BI Project
 
-This repository contains the Manufacturing component of an IT8511 Business Intelligence and Data Mining assignment. It demonstrates the design, deployment, and validation of a SQL Server Analysis Services (SSAS) multidimensional model built from the `MaxMinManufacturingDM` data mart.
+This README shows the main steps I completed while creating and testing the MaxMin Manufacturing SSAS cube.
 
-The cube is an analytical foundation rather than the final business objective. Its results are used in Excel to assess which requested manufacturing analyses are feasible with the available warehouse data and to support evidence-based recommendations.
+## Database Setup
 
-## Current Status
+Granted the SSAS service account read access to the Manufacturing database.
 
-- Manufacturing relational database restored and verified
-- SSAS service account granted read access
-- Data Source and Data Source View created
-- Year, Quarter, and Month named calculations added
-- Time, Product, Batch, and Machine dimensions configured
-- Product, Calendar, Machine/Material, and Plant/Country hierarchies created
-- Accepted Products, Rejected Products, and Elapsed Time measures added
-- Total Products and Percent Rejected calculated measures added
-- Cube built, deployed, processed, and queried successfully
-- Excel OLAP reporting in progress
-- Sales data-mining models and lift-chart evaluation still to be completed
+![Database permissions](docs/screenshots/Picture1.png)
 
-## Technology
+Checked the Manufacturing product data in SQL Server.
 
-- SQL Server Database Engine
-- SQL Server Analysis Services, Multidimensional mode
-- Visual Studio 2019 with Analysis Services Projects
-- Microsoft Excel OLAP PivotTables and PivotCharts
+![Manufacturing database query](docs/screenshots/Picture2.png)
 
-The local development environment uses:
+Checked that the supplied Sales database was also available.
 
-```text
-Database Engine: JOY\SQLEXPRESS
-Analysis Services: JOY\SSAS2019
-Relational database: MaxMinManufacturingDM
-SSAS database: MaxMinManufacturingDM
-Cube: Manufacturing
-```
+![Sales database query](docs/screenshots/Picture3.png)
 
-These server names are machine-specific and must be changed when the project is opened on another computer.
+## Date Calculations and Time Dimension
 
-## Model Overview
+Created Year, Quarter, and Month values from `DateOfManufacture`.
 
-`ManufacturingFact` is the cube measure-group table. It is related to Batch, Product, and Machine dimensions, with additional snowflake relationships for Product Type, Product Subtype, Machine Type, Material, Plant, and Country.
+![Named date calculations](docs/screenshots/Picture4.png)
 
-![Manufacturing Data Source View](docs/screenshots/Picture8.png)
+Created the Manufacturing Time dimension with Day, Month, Quarter, and Year attributes.
 
-The model includes the following user hierarchies:
+![Time dimension attributes](docs/screenshots/Picture5.png)
 
-- Calendar: Year, Quarter, Month, Day
-- Product: Product Type, Product Subtype, Product
-- Machine/Material: Material, Machine Type, Machine
-- Plant Geography: Country, Plant, Machine
+Configured the time attribute relationships.
 
-![Product attribute relationships](docs/screenshots/Picture10.png)
+![Time attribute relationships](docs/screenshots/Picture6.png)
 
-![Machine dimension hierarchies](docs/screenshots/Picture11.png)
+Created the Calendar hierarchy from Year to Day.
 
-## Measures
+![Calendar hierarchy](docs/screenshots/Picture7.png)
 
-Stored measures:
+## Data Source View and Cube
 
-- Accepted Products
-- Rejected Products
-- Elapsed Time For Manufacture
+Added the fact, dimension, and lookup tables and verified their relationships.
 
-Calculated measures:
+![Data Source View](docs/screenshots/Picture8.png)
 
-```text
-Total Products = Accepted Products + Rejected Products
-Percent Rejected = Rejected Products / Total Products
-```
+Created the Manufacturing cube with Time, Product, Batch, and Machine dimensions.
 
-The Percent Rejected calculation includes division-by-zero protection.
+![Cube structure](docs/screenshots/Picture9.png)
 
-![Cube calculated measures](docs/screenshots/Picture14.png)
+## Product and Machine Dimensions
 
-## Deployment and Validation
+Configured Product, Product Subtype, and Product Type relationships.
 
-The project was deployed and processed successfully on the `JOY\SSAS2019` Analysis Services instance.
+![Product relationships](docs/screenshots/Picture10.png)
+
+Created the Machine/Material and Plant Geography hierarchies.
+
+![Machine hierarchies](docs/screenshots/Picture11.png)
+
+Configured the Machine, Machine Type, Material, Plant, and Country relationships.
+
+![Machine relationships](docs/screenshots/Picture12.png)
+
+## Measures and Deployment
+
+Connected the Time, Product, Batch, and Machine dimensions to the Manufacturing Fact measure group.
+
+![Dimension usage](docs/screenshots/Picture13.png)
+
+Created the Total Products and Percent Rejected calculated measures.
+
+![Calculated measures](docs/screenshots/Picture14.png)
+
+Built, deployed, and processed the cube successfully.
 
 ![Successful deployment](docs/screenshots/Picture15.png)
 
-The cube browser was used to validate totals, calculated measures, and Product hierarchy analysis.
+## Cube Results
 
-![Cube results by Product hierarchy](docs/screenshots/Picture17.png)
+Checked the stored and calculated measure totals in the cube browser.
 
-## Data Feasibility Finding
+![Cube totals](docs/screenshots/Picture16.png)
 
-The current warehouse supports analysis of accepted products, rejected products, rejection percentage, and overall manufacturing elapsed time by the available dimensions.
+Viewed the measures by Product Type, Product Subtype, and Product.
 
-It does not contain separate molding, hardening, painting, or curing durations, and it does not contain a paint-type attribute. Those requirements cannot be answered completely from the current schema. The final recommendations report should propose collecting production-stage timestamps and paint-type data.
-
-## Repository Structure
-
-```text
-MaxMinManufacturingDM.sln
-MaxMinManufacturingDM/
-  MaxMinManufacturingDM.dwproj
-  Manufacturing.cube
-  Manufacturing Time.dim
-  Dim Product.dim
-  Dim Batch.dim
-  Dim Machine.dim
-docs/
-  progress.md
-  screenshots/
-```
-
-## Progress Evidence
-
-The detailed implementation record contains all 17 screenshots and descriptions:
-
-[View the complete progress log](docs/progress.md)
-
-## Remaining Assignment Work
-
-1. Complete the Excel workbook with readable PivotTables, filters, drill-down examples, and column charts.
-2. Configure and deploy the supplied `MaxMinSalesDM` project.
-3. Create Decision Trees, Naive Bayes, Clustering, and Neural Network mining models.
-4. Use the required customer filter and 50/50 training and testing split.
-5. Produce and interpret the lift chart.
-6. Complete the recommendations report and practice log.
-
-## Security
-
-No passwords or personal credentials should be committed to this repository. Database backup files, user-specific project settings, generated build folders, and saved connection files should remain excluded from source control.
+![Product hierarchy results](docs/screenshots/Picture17.png)
